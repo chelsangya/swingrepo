@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,9 +16,10 @@ public class MySqlConnection implements DbConnection {
     public Connection openConnection() {
         try{
             String username = "root";
-            String password = "password";
-            String database = "test";
+            String password = "newpassword";
+            String database = "sage";
             Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("run query");
             Connection connection;
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/" + database, username, password
@@ -28,7 +30,7 @@ public class MySqlConnection implements DbConnection {
                 System.out.println("Database connection success");
             }
             return connection;
-        }catch(Exception e){
+        }catch(ClassNotFoundException | SQLException e){
             System.out.println(e);
             return null;
         }
@@ -41,7 +43,7 @@ public class MySqlConnection implements DbConnection {
                 conn.close();
                 System.out.println("Connection close");
             }
-        }catch(Exception e){
+        }catch(SQLException e){
             System.out.println(e);
         }
     }
@@ -49,10 +51,11 @@ public class MySqlConnection implements DbConnection {
     @Override
     public ResultSet runQuery(Connection conn, String query) {
         try{
+            System.out.println("run query");
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(query);
             return result;
-        }catch(Exception e){
+        }catch(SQLException e){
             System.out.println(e);
             return null;
         }
@@ -64,12 +67,9 @@ public class MySqlConnection implements DbConnection {
             Statement stmt = conn.createStatement();
             int result = stmt.executeUpdate(query);
             return result;
-        }catch(Exception e){
+        }catch(SQLException e){
             System.out.println(e);
             return -1;
         }
-    }
-
-   
-    
+    }    
 }

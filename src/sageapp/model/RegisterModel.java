@@ -10,11 +10,13 @@ public class RegisterModel {
     private String lname;
     private String email;
     private String password;
-    public RegisterModel(String fname, String lname, String email, String password){
+    private byte[] image;
+    public RegisterModel(String fname, String lname, String email, String password, byte[] image){
         this.email = email;
         this.password = password;
         this.fname=fname;
         this.lname=lname;
+        this.image=image;
     }
     
     public String getFname(){
@@ -31,6 +33,9 @@ public class RegisterModel {
     public String getPassword(){
         return this.password;
     } 
+    public byte[] getImage(){
+        return this.image;
+    }
     
            
 }

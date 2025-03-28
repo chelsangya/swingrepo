@@ -6,8 +6,17 @@ package sageapp.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import sageapp.DAO.AuthDAO;
 import sageapp.model.RegisterModel;
 
@@ -16,7 +25,9 @@ import sageapp.model.RegisterModel;
  * @author sangyakoirala
  */
 public final class RegistrationView extends javax.swing.JFrame {
-
+    File selectedFile;
+    boolean visibility= false;
+    boolean cvisibility=false;
     /**
      * Creates new form Login
      */
@@ -55,9 +66,19 @@ public final class RegistrationView extends javax.swing.JFrame {
         haveAccountLabel = new javax.swing.JLabel();
         loginLabel = new javax.swing.JLabel();
         emailTextField = new javax.swing.JTextField();
-        passwordTextField = new javax.swing.JTextField();
-        confirmPasswordTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        haveAccountLabel1 = new javax.swing.JLabel();
+        haveAccountLabel2 = new javax.swing.JLabel();
+        haveAccountLabel3 = new javax.swing.JLabel();
+        haveAccountLabel4 = new javax.swing.JLabel();
+        haveAccountLabel5 = new javax.swing.JLabel();
+        imageUploadButton = new javax.swing.JButton();
+        haveAccountLabel6 = new javax.swing.JLabel();
+        uploadedImageLabel = new javax.swing.JLabel();
+        passwordTextField = new javax.swing.JPasswordField();
+        confirmPasswordTextField = new javax.swing.JPasswordField();
+        visibilityButton = new javax.swing.JButton();
+        visibilityButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -83,7 +104,6 @@ public final class RegistrationView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 153));
-        setPreferredSize(new java.awt.Dimension(700, 400));
 
         subtitleLabel.setBackground(new java.awt.Color(0, 153, 153));
         subtitleLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
@@ -99,7 +119,6 @@ public final class RegistrationView extends javax.swing.JFrame {
 
         fnameTextField.setForeground(new java.awt.Color(102, 102, 102));
         fnameTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        fnameTextField.setText("first name");
         fnameTextField.setVerifyInputWhenFocusTarget(false);
         fnameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,7 +128,6 @@ public final class RegistrationView extends javax.swing.JFrame {
 
         lnameTextField.setForeground(new java.awt.Color(102, 102, 102));
         lnameTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        lnameTextField.setText("last name");
         lnameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lnameTextFieldActionPerformed(evt);
@@ -145,7 +163,6 @@ public final class RegistrationView extends javax.swing.JFrame {
 
         emailTextField.setForeground(new java.awt.Color(102, 102, 102));
         emailTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        emailTextField.setText("email address");
         emailTextField.setVerifyInputWhenFocusTarget(false);
         emailTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,56 +170,129 @@ public final class RegistrationView extends javax.swing.JFrame {
             }
         });
 
-        passwordTextField.setForeground(new java.awt.Color(102, 102, 102));
-        passwordTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        passwordTextField.setText("password");
-        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepicker/logo1.png"))); // NOI18N
+
+        haveAccountLabel1.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel1.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel1.setText("First Name");
+
+        haveAccountLabel2.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel2.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel2.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel2.setText("Last Name");
+
+        haveAccountLabel3.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel3.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel3.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel3.setText("Email");
+
+        haveAccountLabel4.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel4.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel4.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel4.setText("Password");
+
+        haveAccountLabel5.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel5.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel5.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel5.setText("Confirm Password");
+
+        imageUploadButton.setBackground(new java.awt.Color(102, 153, 255));
+        imageUploadButton.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        imageUploadButton.setForeground(new java.awt.Color(255, 255, 255));
+        imageUploadButton.setText("Upload ");
+        imageUploadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordTextFieldActionPerformed(evt);
+                imageUploadButtonActionPerformed(evt);
             }
         });
 
-        confirmPasswordTextField.setForeground(new java.awt.Color(102, 102, 102));
-        confirmPasswordTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        confirmPasswordTextField.setText("confirm password");
+        haveAccountLabel6.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel6.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel6.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel6.setText("Image");
+
+        uploadedImageLabel.setBackground(new java.awt.Color(0, 153, 153));
+        uploadedImageLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        uploadedImageLabel.setForeground(new java.awt.Color(51, 51, 51));
+        uploadedImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
         confirmPasswordTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 confirmPasswordTextFieldActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepicker/logo1.png"))); // NOI18N
+        visibilityButton.setText("Show");
+        visibilityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visibilityButtonActionPerformed(evt);
+            }
+        });
+
+        visibilityButton1.setText("Show");
+        visibilityButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visibilityButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(121, 121, 121)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addGap(121, 121, 121)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(registerButton, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lnameTextField, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(fnameTextField, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(emailTextField, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(passwordTextField, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(confirmPasswordTextField, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(subtitleLabel, javax.swing.GroupLayout.Alignment.CENTER))
-                                .addGap(1, 1, 1)))
-                        .addGap(250, 250, 250))
+                            .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(subtitleLabel, javax.swing.GroupLayout.Alignment.CENTER)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(haveAccountLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(loginLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(101, 101, 101)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(haveAccountLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(haveAccountLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(haveAccountLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(haveAccountLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(haveAccountLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(haveAccountLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lnameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(fnameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(emailTextField)
+                                    .addComponent(imageUploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                                    .addComponent(passwordTextField)
+                                    .addComponent(confirmPasswordTextField))
+                                .addGap(1, 1, 1))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(haveAccountLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(loginLabel))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(78, 78, 78)
+                                .addComponent(uploadedImageLabel))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(visibilityButton1)
+                                    .addComponent(visibilityButton))))))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,23 +306,40 @@ public final class RegistrationView extends javax.swing.JFrame {
                         .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(subtitleLabel)
-                .addGap(34, 34, 34)
-                .addComponent(fnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(haveAccountLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(haveAccountLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(haveAccountLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(haveAccountLabel4)
+                    .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(visibilityButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(confirmPasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(haveAccountLabel5)
+                    .addComponent(confirmPasswordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(visibilityButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(imageUploadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(haveAccountLabel6)
+                    .addComponent(uploadedImageLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(haveAccountLabel)
                     .addComponent(loginLabel))
-                .addGap(82, 82, 82))
+                .addGap(38, 38, 38))
         );
 
         pack();
@@ -254,30 +361,26 @@ public final class RegistrationView extends javax.swing.JFrame {
         String email = emailTextField.getText();
         String password = passwordTextField.getText();        
         String cpassword = confirmPasswordTextField.getText();
-
-        RegisterModel rm = new RegisterModel(fname, lname, email, password);
-        
-        boolean check = auth.register(rm);
-        if(check == true){
+        byte[] imageData;
+        try {
+            imageData = Files.readAllBytes(selectedFile.toPath());
+            RegisterModel rm = new RegisterModel(fname, lname, email, password,imageData);
+            boolean check = auth.register(rm);
+             if(check == true){
             JOptionPane.showMessageDialog(null, "Register Successful");
             System.out.println("Insert Success");
         }else{
             JOptionPane.showMessageDialog(null, "Register Failure");
             System.out.println("Insert Failure");
         }
+        } catch (IOException ex) {
+            Logger.getLogger(RegistrationView.class.getName()).log(Level.SEVERE, null, ex);
+        }  
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void emailTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_emailTextFieldActionPerformed
-
-    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordTextFieldActionPerformed
-
-    private void confirmPasswordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmPasswordTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_confirmPasswordTextFieldActionPerformed
 
     private void loginLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginLabelMouseClicked
         // TODO add your handling code here:
@@ -286,6 +389,56 @@ public final class RegistrationView extends javax.swing.JFrame {
              dispose();
         }
     }//GEN-LAST:event_loginLabelMouseClicked
+
+    private void imageUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageUploadButtonActionPerformed
+     JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Select an Image");
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    
+    // Set file filter to allow only image files
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg");
+    fileChooser.setFileFilter(filter);
+    
+    int returnValue = fileChooser.showOpenDialog(this);
+    
+    if (returnValue == JFileChooser.APPROVE_OPTION) {
+        selectedFile = fileChooser.getSelectedFile();
+        
+        // Display image in a JLabel
+        ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+        Image image = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Resize image
+//        uploadedImageLabel.setIcon(new ImageIcon(image)); // Assume you have a JLabel named uploadedImageLabel
+//        uploadedImageLabel.setText(""); // Clear text if any
+    }
+    }//GEN-LAST:event_imageUploadButtonActionPerformed
+
+    private void confirmPasswordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmPasswordTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_confirmPasswordTextFieldActionPerformed
+
+    private void visibilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visibilityButtonActionPerformed
+        // TODO add your handling code here:
+           this.visibility = !visibility;
+        if (this.visibility) {
+        visibilityButton.setText("Hide");
+        passwordTextField.setEchoChar((char) 0); // Show text (no masking)
+    } else {
+        visibilityButton.setText("Show");
+        passwordTextField.setEchoChar('*'); // Hide text (mask input)
+    }
+    }//GEN-LAST:event_visibilityButtonActionPerformed
+
+    private void visibilityButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visibilityButton1ActionPerformed
+        // TODO add your handling code here:
+         this.cvisibility = !cvisibility;
+        if (this.cvisibility) {
+        visibilityButton1.setText("Hide");
+        confirmPasswordTextField.setEchoChar((char) 0); // Show text (no masking)
+    } else {
+        visibilityButton1.setText("Show");
+        confirmPasswordTextField.setEchoChar('*'); // Hide text (mask input)
+    }
+    }//GEN-LAST:event_visibilityButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -330,18 +483,28 @@ public final class RegistrationView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField confirmPasswordTextField;
+    private javax.swing.JPasswordField confirmPasswordTextField;
     private javax.swing.JTextField emailTextField;
     private javax.swing.JTextField fnameTextField;
     private javax.swing.JLabel haveAccountLabel;
+    private javax.swing.JLabel haveAccountLabel1;
+    private javax.swing.JLabel haveAccountLabel2;
+    private javax.swing.JLabel haveAccountLabel3;
+    private javax.swing.JLabel haveAccountLabel4;
+    private javax.swing.JLabel haveAccountLabel5;
+    private javax.swing.JLabel haveAccountLabel6;
+    private javax.swing.JButton imageUploadButton;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField lnameTextField;
     private javax.swing.JLabel loginLabel;
-    private javax.swing.JTextField passwordTextField;
+    private javax.swing.JPasswordField passwordTextField;
     private javax.swing.JButton registerButton;
     private javax.swing.JLabel subtitleLabel;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel uploadedImageLabel;
+    private javax.swing.JButton visibilityButton;
+    private javax.swing.JButton visibilityButton1;
     // End of variables declaration//GEN-END:variables
 }

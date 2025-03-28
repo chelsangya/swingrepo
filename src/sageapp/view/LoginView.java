@@ -14,7 +14,8 @@ import sageapp.model.LoginModel;
  * @author sangyakoirala
  */
  final class LoginView extends javax.swing.JFrame {
-
+     boolean visibility= false;
+     
     /**
      * Creates new form Login
      */
@@ -51,15 +52,20 @@ import sageapp.model.LoginModel;
 
         jFrame1 = new javax.swing.JFrame();
         jFrame2 = new javax.swing.JFrame();
+        haveAccountLabel3 = new javax.swing.JLabel();
+        haveAccountLabel4 = new javax.swing.JLabel();
         subtitleLabel = new javax.swing.JLabel();
         titleLabel = new javax.swing.JLabel();
         emailTextField = new javax.swing.JTextField();
-        passwordTextField = new javax.swing.JTextField();
         loginButton = new javax.swing.JButton();
         forgotLabel = new javax.swing.JLabel();
         noAccountLabel = new javax.swing.JLabel();
         welcomeLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        haveAccountLabel5 = new javax.swing.JLabel();
+        haveAccountLabel6 = new javax.swing.JLabel();
+        passwordTextField = new javax.swing.JPasswordField();
+        visibilityButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -83,6 +89,18 @@ import sageapp.model.LoginModel;
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
+        haveAccountLabel3.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel3.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel3.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel3.setText("Email");
+
+        haveAccountLabel4.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel4.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel4.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel4.setText("Password");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 153));
         setPreferredSize(new java.awt.Dimension(700, 400));
@@ -101,20 +119,11 @@ import sageapp.model.LoginModel;
 
         emailTextField.setForeground(new java.awt.Color(102, 102, 102));
         emailTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        emailTextField.setText("email address");
+        emailTextField.setText("csangya@gmail.com");
         emailTextField.setVerifyInputWhenFocusTarget(false);
         emailTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailTextFieldActionPerformed(evt);
-            }
-        });
-
-        passwordTextField.setForeground(new java.awt.Color(102, 102, 102));
-        passwordTextField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        passwordTextField.setText("password");
-        passwordTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordTextFieldActionPerformed(evt);
             }
         });
 
@@ -154,35 +163,65 @@ import sageapp.model.LoginModel;
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagepicker/logo1.png"))); // NOI18N
 
+        haveAccountLabel5.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel5.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel5.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel5.setText("Email");
+
+        haveAccountLabel6.setBackground(new java.awt.Color(0, 153, 153));
+        haveAccountLabel6.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        haveAccountLabel6.setForeground(new java.awt.Color(51, 51, 51));
+        haveAccountLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        haveAccountLabel6.setText("Password");
+
+        passwordTextField.setText("1234");
+
+        visibilityButton.setText("Show");
+        visibilityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visibilityButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(228, 228, 228)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(titleLabel)
+                    .addComponent(subtitleLabel))
+                .addGap(250, 250, 250))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(189, 189, 189)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(haveAccountLabel5)
+                    .addComponent(haveAccountLabel6))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(titleLabel)
-                            .addComponent(subtitleLabel)
-                            .addComponent(emailTextField)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 119, Short.MAX_VALUE)
-                                .addComponent(forgotLabel)
-                                .addGap(1, 1, 1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(forgotLabel))
+                            .addComponent(emailTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(loginButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                             .addComponent(passwordTextField))
-                        .addGap(250, 250, 250))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(visibilityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(119, 119, 119))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(noAccountLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(welcomeLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(97, 97, 97))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,9 +233,14 @@ import sageapp.model.LoginModel;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(subtitleLabel)
                 .addGap(28, 28, 28)
-                .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(haveAccountLabel5))
                 .addGap(12, 12, 12)
-                .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(haveAccountLabel6)
+                    .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(visibilityButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(forgotLabel)
                 .addGap(24, 24, 24)
@@ -214,10 +258,6 @@ import sageapp.model.LoginModel;
     private void emailTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_emailTextFieldActionPerformed
-
-    private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordTextFieldActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
@@ -239,7 +279,7 @@ import sageapp.model.LoginModel;
         }else{
             // login success
             JOptionPane.showMessageDialog(this, "Login Success");
-            DashboardView ds = new DashboardView(user);
+            AddProductView ds = new AddProductView(user);
             ds.setVisible(true);
             this.dispose();
         }
@@ -256,6 +296,18 @@ import sageapp.model.LoginModel;
             dispose();
         }
     }//GEN-LAST:event_welcomeLabel4MouseClicked
+
+    private void visibilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visibilityButtonActionPerformed
+        // TODO add your handling code here:
+        this.visibility = !visibility;
+        if (this.visibility) {
+        visibilityButton.setText("Hide");
+        passwordTextField.setEchoChar((char) 0); // Show text (no masking)
+    } else {
+        visibilityButton.setText("Show");
+        passwordTextField.setEchoChar('*'); // Hide text (mask input)
+    }
+    }//GEN-LAST:event_visibilityButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,14 +350,19 @@ import sageapp.model.LoginModel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField emailTextField;
     private javax.swing.JLabel forgotLabel;
+    private javax.swing.JLabel haveAccountLabel3;
+    private javax.swing.JLabel haveAccountLabel4;
+    private javax.swing.JLabel haveAccountLabel5;
+    private javax.swing.JLabel haveAccountLabel6;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel noAccountLabel;
-    private javax.swing.JTextField passwordTextField;
+    private javax.swing.JPasswordField passwordTextField;
     private javax.swing.JLabel subtitleLabel;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JButton visibilityButton;
     private javax.swing.JLabel welcomeLabel4;
     // End of variables declaration//GEN-END:variables
 

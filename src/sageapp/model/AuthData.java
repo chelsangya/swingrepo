@@ -9,16 +9,24 @@ package sageapp.model;
  * @author sangyakoirala
  */
 public class AuthData {
+    private int uid;
     private String fname;    
     private String lname;
     private String email;
     private String password;
+    private byte[] image;
     
-    public AuthData(String fname, String lname, String email, String password){
+    public AuthData(int uid, String fname, String lname, String email, String password, byte[] image){
+        this.uid=uid;
         this.email = email;
         this.password = password;
         this.fname=fname;
         this.lname=lname;
+        this.image=image;
+    }
+    
+    public int getUid(){
+        return this.uid;   
     }
     
     public String getFname(){
@@ -35,4 +43,8 @@ public class AuthData {
     public String getPassword(){
         return this.password;
     } 
+    public byte[] getImage(){
+        return this.image;
+    }
+    
 }

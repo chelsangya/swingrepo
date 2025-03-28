@@ -6,13 +6,20 @@ package sageapp.model;
  * @author sangyakoirala
  */
 public class LoginResponse {
+    private int uid;
     private String email;
     private String password;
-    private String username;
-    public LoginResponse(String email, String password, String username){
+    private String fname;
+    private String lname;
+    public LoginResponse(int uid, String email, String password, String fname,String lname){
+        this.uid=uid;
         this.email = email;
         this.password = password;
-        this.username = username;
+        this.fname = fname;
+        this.lname=lname;
+    }
+    public Integer getUid(){
+        return this.uid;
     }
     
     public String getEmail(){
@@ -22,7 +29,10 @@ public class LoginResponse {
         return this.password;
     } 
     
-    public String getUsername(){
-        return this.username;
+    public String getFname(){
+        return this.fname;
+    }    
+    public String getLname(){
+        return this.lname;
     }    
 }

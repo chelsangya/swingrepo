@@ -76,12 +76,11 @@ public final class EntryView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(700, 400));
 
         welcomeLabel.setBackground(new java.awt.Color(0, 153, 153));
         welcomeLabel.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
         welcomeLabel.setForeground(new java.awt.Color(0, 102, 102));
-        welcomeLabel.setText("Book Your Event Space with Ease");
+        welcomeLabel.setText("Manage Your Inventory with Ease");
 
         loginButton.setBackground(new java.awt.Color(0, 102, 102));
         loginButton.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
@@ -124,7 +123,7 @@ public final class EntryView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(129, 129, 129)
                         .addComponent(welcomeLabel)))
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
