@@ -133,6 +133,11 @@ import sageapp.model.ProductModel;
         });
 
         historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyButtonActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -425,6 +430,14 @@ import sageapp.model.ProductModel;
         this.dispose();
 
     }//GEN-LAST:event_billingButtonActionPerformed
+
+    private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
+        // TODO add your handling code here:
+        HistoryView bv = new HistoryView(user);
+        bv.setSize(700, 400);
+        bv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_historyButtonActionPerformed
 
     /**
      * @param args the command line arguments

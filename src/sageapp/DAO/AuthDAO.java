@@ -1,15 +1,15 @@
 package sageapp.DAO;
 
 import sageapp.database.MySqlConnection;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Random;
+import sageapp.controller.SMTPSMailSender;
 import sageapp.model.AuthData;
 import sageapp.model.LoginModel;
 import sageapp.model.RegisterModel;
@@ -83,7 +83,7 @@ public AuthData login(LoginModel login) {
         return null;
     }
 
-    public AuthData getUser(int uid) {
+public AuthData getUser(int uid) {
         try {
             Connection conn = openConnection();
             String sql = "SELECT * FROM users WHERE id = ?";  // Fixing incorrect uid reference
@@ -177,6 +177,68 @@ public AuthData login(LoginModel login) {
         } catch (SQLException e) {
             System.err.println("Failed to update password: " + e.getMessage());
             throw e;
+        }
+    }
+    public int getUserIdByEmail(String email){
+       int id;
+     try {
+            Connection conn = openConnection();
+         
+            String sql = "SELECT id FROM users WHERE email = ?";  // Fixing incorrect uid reference
+            
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, email);
+                ResultSet result = ps.executeQuery();
+
+                if (result != null && result.next()) {   
+                  id=result.getInt("id");
+                  return id;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getUser: " + e.getMessage());
+       
+         
+        }
+    return -1;
+}
+    
+   // Method to generate a random OTP
+    public String generateOTP() {
+        Random rand = new Random();
+        int otp = 100000 + rand.nextInt(900000);  // Generate a 6-digit OTP
+        return String.valueOf(otp);
+    }
+
+   // Method to send OTP via email
+    public boolean sendOTPEmail(String email, String otp) {
+    String subject = "Password Reset Code";
+    String messageBody = "Your OTP code is: " + otp;
+
+    System.out.println("Sending OTP to: " + email);
+
+    boolean isSent;
+    isSent = SMTPSMailSender.sendMail(email, subject, messageBody);
+//isSent=false;
+    if (isSent) {
+        System.out.println("OTP sent successfully to: " + email);
+    } else {
+        System.err.println("Failed to send OTP to: " + email);
+    }
+
+    return isSent;
+}
+    // Method to generate OTP and send it via email
+    public String generateAndSendOTP(String email) {
+        // Generate the OTP
+        String otp = generateOTP();
+
+        // Send the OTP via email
+        boolean emailSent= sendOTPEmail(email, otp);
+        if (emailSent){
+            return otp;
+        } else {
+            return null;
         }
     }
 

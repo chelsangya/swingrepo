@@ -6,14 +6,19 @@
  */
 package sageapp.DAO;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import sageapp.database.MySqlConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import sageapp.model.BillData;
 import sageapp.model.BillModel;
+import sageapp.model.ProductData;
 
 //
 //package sageapp.DAO;
@@ -101,33 +106,65 @@ public boolean addBill(BillModel bill) {
     }
 }
 
-
-
-
-  public String findCustomer(String phone, int uid) {
-    String name = null;
-    String sql = "SELECT name FROM customers WHERE phone = ? AND uid=?";
-
-    try (Connection conn = openConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, phone);
-        ps.setInt(2, uid);
-        System.out.println("Executing query...");
-
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) { // Check if a record exists
-                name = rs.getString("name"); // Retrieve the name from the result set
+public List<BillData> fetchAllBillsByUid(int uid) {
+        String sql = "SELECT * FROM bills WHERE uid=?";
+        List<BillData> bills = new ArrayList<>();
+        CustomerDAO customer= new CustomerDAO();
+        try (Connection conn = openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+    
+            ps.setInt(1, uid);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) { // Use while to fetch all bills
+                    int billId = rs.getInt("bill_id");
+                    Timestamp dateOfCreation = rs.getTimestamp("date_of_creation");
+                    String phone = rs.getString("phone");   
+                    String name= customer.findCustomer(phone, uid);
+                    System.out.println("DATA "+billId+" Name "+name);
+                    int totalPrice = rs.getInt("total_price");
+    
+                    // Fetch products for this bill
+                    Map<ProductData, Integer> products = fetchBillProducts(billId, conn, uid);
+    
+                    // Create a BillModel object and add it to the list
+                    bills.add(new BillData(billId,uid,name, phone, totalPrice, dateOfCreation, products));
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Error fetching bills by UID: " + e.getMessage());
         }
-    } catch (Exception e) {
-        System.out.println("Error in fetching Customer: " + e.getMessage());
+        return bills;
     }
 
-    return name;
-}
-    public int countCustomersByUid(int uid) {
+    public Map<ProductData, Integer> fetchBillProducts(int billId, Connection conn, int uid) {
+        String sql = "SELECT bp.product_id, bp.quantity, p.* FROM bill_products bp "
+                + "JOIN products p ON bp.product_id = p.id WHERE bp.bill_id = ?";
+        Map<ProductData, Integer> products = new HashMap<>();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, billId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) { // Use while to get all products for this bill
+                    int quantity = rs.getInt("quantity");
+                    ProductData product = new ProductData(
+                            uid,
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getInt("price"),
+                            rs.getInt("stock")
+                    );
+                    products.put(product, quantity);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching bill products: " + e.getMessage());
+        }
+        return products;
+    }
+
+
+  public int countBillsByUid(int uid) {
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM customers WHERE uid = ?";
+        String sql = "SELECT COUNT(*) FROM bills WHERE uid = ?";
 
         try (Connection conn = openConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

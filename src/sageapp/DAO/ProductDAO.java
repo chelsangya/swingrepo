@@ -163,7 +163,36 @@ public class ProductDAO extends MySqlConnection {
     return id;
 }
      
- public ProductData findProductByName(String name) {
+ public ProductData findProductById(int id) {
+    int uid;
+    ProductData product= new ProductData();
+    String sql = "SELECT * FROM products WHERE id = ?";
+
+    try (Connection conn = openConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        System.out.println("Executing query...");
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {  
+                product.setId(rs.getInt("id"));
+                product.setUid(rs.getInt("uid"));
+                product.setName(rs.getString("name"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getInt("price"));
+                product.setStock(rs.getInt("stock"));
+
+                
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Error in fetching Customer: " + e.getMessage());
+    }
+ System.out.println("PRODUCT FOUND"+product);
+ return product;
+}
+ 
+public ProductData findProductByName(String name) {
     int id = 000;
     int uid;
     ProductData product= new ProductData();
@@ -191,6 +220,72 @@ public class ProductDAO extends MySqlConnection {
     }
  System.out.println("PRODUCT FOUND"+product);
  return product;
+}
+
+
+ public ProductData updateProduct(ProductModel product, int id) throws SQLException {
+        String sql = "UPDATE products SET name = ?, description = ?, stock = ?, price=? WHERE id = ?";  // Fixing column names
+        
+        try (Connection conn = openConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getDescription());
+            ps.setInt(3, product.getStock());
+            ps.setInt(4, product.getPrice());
+            ps.setInt(5,id);
+            
+            int rowsUpdated = ps.executeUpdate();
+            
+            if (rowsUpdated > 0) {
+                return getProduct(id);
+            } else {
+                throw new SQLException("No rows updated. Product may not exist.");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Failed to update product: " + e.getMessage());
+            throw e;
+        }
+    }
+   public ProductData getProduct(int id) {
+        try {
+            Connection conn = openConnection();
+            String sql = "SELECT * FROM products WHERE id = ?";  // Fixing incorrect uid reference
+            
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                ResultSet result = ps.executeQuery();
+
+                if (result != null && result.next()) {
+                    int uid= result.getInt("uid");
+                    String name = result.getString("name");
+                    String description = result.getString("description");
+                    int stock = result.getInt("stock");
+                    int price = result.getInt("price");
+
+                    return new ProductData(id,uid,name,description,price,stock);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getProduct: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+public boolean deleteProductById(int id){
+    String sql= "DELETE FROM products where id=?";
+    try(Connection conn = openConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+     int result = ps.executeUpdate();
+        return result > 0;
+    }
+    catch(Exception e){
+     return false;
+    }
+   
 }
 
 }

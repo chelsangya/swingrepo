@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import sageapp.DAO.AuthDAO;
 import sageapp.model.AuthData;
 import sageapp.model.LoginModel;
+import sageapp.model.UpdatePasswordModel;
 
 /**
  *
@@ -15,11 +16,12 @@ import sageapp.model.LoginModel;
  */
  final class LoginView extends javax.swing.JFrame {
      boolean visibility= false;
-     
+      AuthDAO auth;
     /**
      * Creates new form Login
      */
     public LoginView() {
+        auth = new AuthDAO();
         initComponents();
         uI();
         setSize(700, 400);
@@ -58,7 +60,7 @@ import sageapp.model.LoginModel;
         titleLabel = new javax.swing.JLabel();
         emailTextField = new javax.swing.JTextField();
         loginButton = new javax.swing.JButton();
-        forgotLabel = new javax.swing.JLabel();
+        forgotPasswordLabel = new javax.swing.JLabel();
         noAccountLabel = new javax.swing.JLabel();
         welcomeLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -137,11 +139,16 @@ import sageapp.model.LoginModel;
             }
         });
 
-        forgotLabel.setBackground(new java.awt.Color(0, 153, 153));
-        forgotLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
-        forgotLabel.setForeground(new java.awt.Color(51, 153, 255));
-        forgotLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        forgotLabel.setText("Forgot Password?");
+        forgotPasswordLabel.setBackground(new java.awt.Color(0, 153, 153));
+        forgotPasswordLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        forgotPasswordLabel.setForeground(new java.awt.Color(51, 153, 255));
+        forgotPasswordLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        forgotPasswordLabel.setText("Forgot Password?");
+        forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                forgotPasswordLabelMouseClicked(evt);
+            }
+        });
 
         noAccountLabel.setBackground(new java.awt.Color(0, 153, 153));
         noAccountLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
@@ -209,7 +216,7 @@ import sageapp.model.LoginModel;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(forgotLabel))
+                                .addComponent(forgotPasswordLabel))
                             .addComponent(emailTextField, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(loginButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                             .addComponent(passwordTextField))
@@ -242,7 +249,7 @@ import sageapp.model.LoginModel;
                     .addComponent(passwordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(visibilityButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(forgotLabel)
+                .addComponent(forgotPasswordLabel)
                 .addGap(24, 24, 24)
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -272,7 +279,7 @@ import sageapp.model.LoginModel;
             return;
         }
         LoginModel lm = new LoginModel(email, password);
-        AuthDAO auth = new AuthDAO();
+       
         AuthData user = auth.login(lm);
         if(user == null){
             JOptionPane.showMessageDialog(this, "Invalid Credentials");
@@ -298,8 +305,8 @@ import sageapp.model.LoginModel;
     }//GEN-LAST:event_welcomeLabel4MouseClicked
 
     private void visibilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visibilityButtonActionPerformed
-        // TODO add your handling code here:
-        this.visibility = !visibility;
+
+      
         if (this.visibility) {
         visibilityButton.setText("Hide");
         passwordTextField.setEchoChar((char) 0); // Show text (no masking)
@@ -307,7 +314,68 @@ import sageapp.model.LoginModel;
         visibilityButton.setText("Show");
         passwordTextField.setEchoChar('*'); // Hide text (mask input)
     }
+          this.visibility = !visibility;
     }//GEN-LAST:event_visibilityButtonActionPerformed
+
+    private void forgotPasswordLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotPasswordLabelMouseClicked
+   // Step 1: Prompt the user for their email to reset the password
+    String emailToReset = JOptionPane.showInputDialog(this, "Enter your email address to reset password:");
+    
+    // Step 2: Check if the user exists
+    int result = auth.getUserIdByEmail(emailToReset);
+    
+    if (result == -1) {
+        // User does not exist
+        JOptionPane.showMessageDialog(this, "User with this email does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+    } else {
+        // User found, generate and send OTP
+        System.out.println("User Found");
+        
+        String otpResponse = auth.generateAndSendOTP(emailToReset);
+        
+        if (otpResponse == null) {
+            // OTP generation failed
+            JOptionPane.showMessageDialog(this, "Failed to generate OTP. Please try again later.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Step 3: Ask the user to enter the OTP
+            String otpEntered = JOptionPane.showInputDialog(this, "Enter the OTP sent to your email:");
+            
+            if (otpEntered != null && otpEntered.equals(otpResponse)) {
+                // OTP is correct, allow the user to enter a new password and confirm password
+                String newPassword = JOptionPane.showInputDialog(this, "Enter your new password:");
+                String confirmPassword = JOptionPane.showInputDialog(this, "Confirm your new password:");
+                
+                if (newPassword.equals(confirmPassword)) {
+                    // Step 4: Update the password in the database (no hashing, store as is)
+                    UpdatePasswordModel updatePassword = new UpdatePasswordModel(result, newPassword);
+                    
+                  try{
+                        // Step 5: Perform password update
+                    AuthData user = auth.updatePassword(updatePassword, result); // Assuming result is the user ID
+                    
+                    boolean passwordUpdated = (user != null);
+                    
+                    if (passwordUpdated) {
+                        // Password update successful
+                        JOptionPane.showMessageDialog(this, "Password successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        // Password update failed
+                        JOptionPane.showMessageDialog(this, "Failed to update password. Please try again later.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                  } catch (Exception e){
+                      
+                  }
+                } else {
+                    // Passwords do not match
+                    JOptionPane.showMessageDialog(this, "Passwords do not match. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                // OTP is incorrect
+                JOptionPane.showMessageDialog(this, "Incorrect OTP. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    }//GEN-LAST:event_forgotPasswordLabelMouseClicked
 
     /**
      * @param args the command line arguments
@@ -349,7 +417,7 @@ import sageapp.model.LoginModel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField emailTextField;
-    private javax.swing.JLabel forgotLabel;
+    private javax.swing.JLabel forgotPasswordLabel;
     private javax.swing.JLabel haveAccountLabel3;
     private javax.swing.JLabel haveAccountLabel4;
     private javax.swing.JLabel haveAccountLabel5;

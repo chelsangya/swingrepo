@@ -13,6 +13,7 @@ public class BillModel {
     private String phone;
     private int totalPrice;
     private Map<ProductData,Integer> products;
+    public BillModel(){}
     public BillModel(int uid, String phone, int totalPrice, Map<ProductData,Integer> products){
         this.uid=uid;
         this.phone=phone;

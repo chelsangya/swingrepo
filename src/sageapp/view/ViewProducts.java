@@ -152,6 +152,11 @@ import sageapp.model.ProductData;
         });
 
         historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyButtonActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -365,16 +370,181 @@ private void deleteProductAction(ProductData product){
         bv.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_billingButtonActionPerformed
+
+    private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
+        // TODO add your handling code here:
+          HistoryView bv = new HistoryView(user);
+        bv.setSize(700, 400);
+        bv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_historyButtonActionPerformed
 private void productRowClicked(ProductData product) {
     System.out.println("Product clicked: " + product.getName());
     
     showProductDetails(product);
 }
 
-// Example method to show product details (replace with your actual method)
 private void showProductDetails(ProductData product) {
-    // Example code to display product details (e.g., in a new window or dialog)
-    JOptionPane.showMessageDialog(null, "Product UID: " + product.getUid()+ "\nID: " + product.getId()+ "\nName: " + product.getName() + "\nPrice: " + product.getPrice() + "\nStock: " + product.getStock());
+    // Create the main panel for product details
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+    mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 3)); // Add padding around panel
+    mainPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    // Create a panel for the table (product details in a table-like format)
+    JPanel tablePanel = new JPanel();
+    tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS)); // Vertical alignment of labels
+    tablePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    // Create a 2D array for table data (each product attribute as a row)
+    Object[][] tableData = {
+        {"ID:", product.getId()},
+        {"Name:", product.getName()},
+        {"Description:", product.getDescription()},
+        {"Price:", product.getPrice()},
+        {"Stock:", product.getStock()}
+    };
+
+    // Column names
+    String[] columnNames = {"Attribute", "Value"};
+
+    // Create a JTable to display the product details in a table format
+    JTable productTable = new JTable(tableData, columnNames) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; 
+        }
+    };
+
+    // Set the table to be non-editable
+    productTable.setEnabled(false);
+
+    // Set column widths for better readability
+    productTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+    productTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+
+    // Enable text wrapping for the "Description" column (column 1)
+    productTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JTextArea textArea = new JTextArea();
+            textArea.setText(value.toString());
+            textArea.setWrapStyleWord(true);
+            textArea.setLineWrap(true);
+            textArea.setOpaque(false); // Make the background transparent
+            textArea.setEditable(false);
+            textArea.setFont(table.getFont());
+            return textArea;
+        }
+    });
+
+    // Set table appearance
+    productTable.setFont(new Font("Arial", Font.PLAIN, 14));
+    productTable.setRowHeight(35); // Increased row height for better visibility
+
+    // Set custom table cell renderers for a nicer look
+    productTable.setGridColor(Color.LIGHT_GRAY); // Set grid color for the table
+    productTable.setShowGrid(true); // Show grid lines
+
+    // Create a JScrollPane to make the table scrollable
+    JScrollPane scrollPane = new JScrollPane(productTable);
+    scrollPane.setPreferredSize(new Dimension(350, 205)); // Increase height of the table
+
+    // Add the table (inside the scroll pane) to the table panel
+    tablePanel.add(scrollPane);
+
+    // Add the table panel to the main panel
+    mainPanel.add(tablePanel);
+
+    // Add some vertical space between table and buttons
+    mainPanel.add(Box.createVerticalStrut(30));
+
+    // Create a panel for buttons
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Align the buttons to the left
+
+    // Create Edit button
+    JButton editButton = new JButton("Edit");
+    editButton.setFont(new Font("Arial", Font.PLAIN, 12));
+    editButton.setBackground(Color.BLUE);
+    editButton.setForeground(Color.WHITE);
+    editButton.setFocusPainted(false);
+    editButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    editButton.addActionListener(e -> editProduct(product));
+
+    // Create Delete button
+    JButton deleteButton = new JButton("Delete");
+    deleteButton.setFont(new Font("Arial", Font.PLAIN, 12));
+    deleteButton.setBackground(Color.RED);
+    deleteButton.setForeground(Color.WHITE);
+    deleteButton.setFocusPainted(false);
+    deleteButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    deleteButton.addActionListener(e -> {
+        // Show the delete confirmation dialog
+        int result = JOptionPane.showConfirmDialog(mainPanel, 
+                "Are you sure you want to delete this product?", 
+                "Confirm Delete", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (result == JOptionPane.YES_OPTION) {
+            deleteProduct(product, mainPanel); // Pass mainPanel to update after deletion
+        }
+    });
+
+    // Add buttons to the button panel
+    buttonPanel.add(editButton);
+    buttonPanel.add(deleteButton);
+
+    // Add the button panel to the main panel
+    mainPanel.add(buttonPanel);
+
+    // Add the main panel to the frame or container (instead of JDialog)
+    JFrame frame = new JFrame("Product Details");
+    frame.setSize(400, 400);
+    frame.setLocationRelativeTo(null); // Center the window
+    frame.add(mainPanel);
+    frame.setVisible(true);
+}
+
+
+private void deleteProduct(ProductData product, JPanel mainPanel) {
+    // Attempt to delete the product from the database
+    boolean result = productDAO.deleteProductById(product.getId());
+
+    if (result) {
+        // Show a confirmation dialog indicating the product was deleted successfully
+        JOptionPane.showMessageDialog(null, 
+            "Product '" + product.getName() + "' has been successfully deleted.", 
+            "Delete Successful", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // Now directly update the products view (no JDialog involved)
+        ViewProducts view = new ViewProducts(user);
+        view.setSize(700, 400);  // Set the size for the ViewProducts window
+        view.setVisible(true);   // Make the updated view visible
+
+        // Optionally close the current window if it's no longer needed
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(mainPanel);
+        parentFrame.dispose();  // Close the product details frame
+        this.dispose();
+    } else {
+        // Show an error message if the deletion failed
+        JOptionPane.showMessageDialog(null, 
+            "Failed to delete the product.", 
+            "Delete Failed", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+// Method to edit the product (implement as needed)
+private void editProduct(ProductData product) {
+    System.out.println("Editing product: " + product.getName());
+    // Implement the logic to open an edit dialog and update the product
+    EditProductView editProduct= new EditProductView(user,product);
+    editProduct.setSize(700,400);
+    editProduct.setVisible(true);
+    this.dispose();
 }
     /**
      * @param args the command line arguments

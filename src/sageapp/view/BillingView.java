@@ -244,6 +244,11 @@ import sageapp.model.ProductData;
         });
 
         historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyButtonActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -758,7 +763,7 @@ private void updateProductPanel() {
     }
 
     // Add total price at the bottom
-    billDetails.append("----------------------------------------\n")
+    billDetails.append("---------------------------------------------------------\n")
                .append("Total Price: $").append(String.format("%.2f", totalBillPrice)).append("\n");
 
     // Create a JTextArea to display the bill details
@@ -807,6 +812,14 @@ private void updateProductPanel() {
     private void quantityTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_quantityTextFieldActionPerformed
+
+    private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
+        // TODO add your handling code here:
+          HistoryView bv = new HistoryView(user);
+        bv.setSize(700, 400);
+        bv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_historyButtonActionPerformed
 
     /**
      * @param args the command line arguments
